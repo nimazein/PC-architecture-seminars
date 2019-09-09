@@ -6,31 +6,20 @@
 
 using namespace std;
 
+void RightAnswer(long long binaryNumber, int checkedAnswer);
+
 int main()
 {
 	// 0101111110001000 - 24456
-	// 1001111110001110 - 40846
+	// 1001111110001110 - -24690
 	// 0001111110000000 - 8064
 
-	// 1111 - 15
-	// 1110 - 14
-	// 1101 - 13
-	// 1100
-	// 1000
-	// 1001
-	// 0110
-	// 0111
-	// 0011
-	// 0001
 
 	long long binaryNumber;
 	cin >> binaryNumber;
 
 	int highByte = binaryNumber / 100000000;
 	int lowerByte = binaryNumber % 100000000;
-
-	cout << highByte << endl;
-	cout << lowerByte << endl;
 
 	int decimal = 0;
 
@@ -78,8 +67,6 @@ int main()
 		mov decimal, ebx
 		jmp aw
 
-
-
 	getHighByte:
 
 		mov eax, highByte
@@ -95,19 +82,50 @@ int main()
 		add edx, ebx
 
 		mov decimal, edx
-
 		jmp check
 
-
-			aw :
+	aw:
 		nop;
-
-
 	}
 
 	cout << decimal << endl;
+	RightAnswer(binaryNumber, decimal);
 
 	_getch();
 	return 0;
+
+}
+void RightAnswer(long long binaryNumber, int checkedAnswer) {
+
+	int decimalNumber = 0;
+	int mask = 1;
+
+	for (int i = 0; i < 15; i++)
+	{
+		if (binaryNumber % 10 == 1)
+		{
+			decimalNumber += mask;
+		}
+		mask <<= 1;
+		binaryNumber /= 10;
+	}
+
+	if (binaryNumber == 1)
+	{
+		decimalNumber -= 32768;	//2^15
+	}
+
+	setlocale(LC_CTYPE, "rus");
+	if (decimalNumber == checkedAnswer)
+	{
+		cout << "Ответ верен";
+	}
+	else
+	{
+		cout << "Ответ не верен";
+	}
+
+
+
 
 }
