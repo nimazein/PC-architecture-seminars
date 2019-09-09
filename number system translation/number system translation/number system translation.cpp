@@ -40,106 +40,55 @@ int main()
 
 	__asm
 	{
-		mov cx, iterator
-		solveLowerByte :
+		xor cx, cx
+		mov eax, lowerByte
+
+	start:
 
 		xor edx, edx
-			mov eax, lowerByte
-			mov ebx, 10
+		mov ebx, 10
+		div ebx
+		
+		cmp edx, 0h
+		ja addBitToDecimal
 
-			div ebx
-
-			mov lowerByte, eax
-
-			cmp edx, 0h
-			ja addBitToDecimal
-
-			check :
+	check:
 
 		xor ebx, ebx
-			mov ebx, mask
-			shl ebx, 1
-			mov mask, ebx
+		mov ebx, mask
+		shl ebx, 1
+		mov mask, ebx
 
-			inc cx
-			cmp cx, 8
-			jb solveLowerByte
+		inc cx
+		cmp cx, 8
+		je getHighByte
+		cmp cx, 15
+		jb start
 
-			mov cx, 0
-			jmp solveHighByte // Переход в функцию верхнего байта
+		jmp aw
 
-			addBitToDecimal :
+	getHighByte:
 
-		xor eax, eax
-			mov eax, decimal
-			xor ebx, ebx
-			mov ebx, mask
+		mov eax, highByte
+		jmp start
 
-			add eax, ebx
-			mov decimal, eax
-
-			jmp check
-
-
-			solveHighByte :
-
+	addBitToDecimal:
 		xor edx, edx
-			mov eax, highByte
-			mov ebx, 10
-
-			div ebx
-
-			mov highByte, eax
-
-			cmp edx, 0h
-			ja addHighBitToDecimal
-
-
-			checkHigh :
-
 		xor ebx, ebx
-			mov ebx, mask
-			shl ebx, 1
-			mov mask, ebx
 
-			inc cx
-			cmp cx, 7
-			jb solveHighByte
+		mov edx, decimal
+		mov ebx, mask
+
+		add edx, ebx
+
+		mov decimal, edx
+
+		jmp check
 
 
-			determineSign :
+		
+		
 
-		xor edx, edx
-			mov eax, highByte
-			mov ebx, 10
-
-			div ebx
-
-			cmp edx, 0h // Если самый левый бит равен нулю, то число положительное
-			je aw
-
-			createNegative : // иначе - отриацательное
-
-		mov eax, decimal
-			mov ebx, 32768 // 2^15
-
-			sub ebx, eax
-			neg ebx
-
-			mov decimal, ebx
-			jmp aw
-
-			addHighBitToDecimal :
-
-		xor eax, eax
-			mov eax, decimal
-			xor ebx, ebx
-			mov ebx, mask
-
-			add eax, ebx
-			mov decimal, eax
-
-			jmp checkHigh
 
 
 
