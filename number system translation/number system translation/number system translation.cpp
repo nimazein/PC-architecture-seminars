@@ -64,8 +64,21 @@ int main()
 		je getHighByte
 		cmp cx, 15
 		jb start
+	
+	determineSign:
+		
+		cmp eax, 0h
+		je aw
 
+		mov eax, decimal
+		mov ebx, 32768 // 2^15
+		sub ebx, eax
+
+		neg ebx
+		mov decimal, ebx
 		jmp aw
+
+
 
 	getHighByte:
 
@@ -84,13 +97,6 @@ int main()
 		mov decimal, edx
 
 		jmp check
-
-
-		
-		
-
-
-
 
 
 			aw :
